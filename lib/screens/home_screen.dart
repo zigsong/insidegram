@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:insidegram/screens/note_screen.dart';
 import 'package:insidegram/widgets/bead_widget.dart';
 
 class Homescreen extends StatefulWidget {
@@ -33,11 +34,30 @@ class _HomescreenState extends State<Homescreen> {
       backgroundColor: Colors.pink.shade50,
       body: Container(
           padding: const EdgeInsets.all(20),
-          child: GridView.count(
-            crossAxisCount: 3,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            children: [...beadItems, ...beadItems, ...beadItems],
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 60,
+              ),
+              GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const NoteScreen()));
+                  },
+                  child: const Bead(title: '+', color: Colors.white)),
+              Expanded(
+                child: GridView.count(
+                  padding: const EdgeInsets.symmetric(vertical: 40),
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  children: [...beadItems, ...beadItems, ...beadItems],
+                ),
+              ),
+            ],
           )),
     );
   }
