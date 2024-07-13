@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
 
+class BeadItem {
+  final String title;
+  final Color? color;
+
+  BeadItem({required this.title, this.color});
+}
+
 class Bead extends StatelessWidget {
   const Bead({super.key, required this.title, this.color});
 
