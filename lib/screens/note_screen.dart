@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:insidegram/widgets/emotion_comment.dart';
 
 class NoteScreen extends StatefulWidget {
   const NoteScreen({super.key});
@@ -27,6 +28,9 @@ class _NoteScreenState extends State<NoteScreen> {
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const EmotionComment(
+                  emotion: Emotion.joy,
+                  text: '좋은 사람들과의 피크닉은 언제나 우리를 즐겁게 하지! 너무 즐거웠겠다!'),
               TextButton(
                 style: TextButton.styleFrom(
                     textStyle: const TextStyle(fontSize: 16),
@@ -61,6 +65,7 @@ class _NoteScreenState extends State<NoteScreen> {
               Container(
                 height: 24,
                 width: 24,
+                margin: const EdgeInsets.only(bottom: 20),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(50),
@@ -73,6 +78,8 @@ class _NoteScreenState extends State<NoteScreen> {
                   ],
                 ),
               ),
+              const EmotionComment(
+                  emotion: Emotion.fear, text: '호수에 빠지고 그러진 않았겠지? 언제나 조심해야해'),
               const SizedBox(
                 height: 60,
               )
