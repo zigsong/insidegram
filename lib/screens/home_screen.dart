@@ -22,6 +22,17 @@ class _HomescreenState extends State<Homescreen> {
       BeadItem(title: '6. 지각', color: Colors.red.shade300),
       BeadItem(title: '7. 바다', color: Colors.green.shade300),
       BeadItem(title: '8. 행복', color: Colors.blue.shade300),
+      BeadItem(
+        title: '9. 핔닠',
+      ),
+      BeadItem(title: '10. 지각', color: Colors.red.shade300),
+      BeadItem(title: '11. 바다', color: Colors.green.shade300),
+      BeadItem(title: '12. 행복', color: Colors.blue.shade300),
+      BeadItem(
+        title: '13. 핔닠',
+      ),
+      BeadItem(title: '14. 지각', color: Colors.red.shade300),
+      BeadItem(title: '15. 바다', color: Colors.green.shade300),
     ];
 
     List<Widget> beadItems = beadItemsData.map((item) {
@@ -45,27 +56,27 @@ class _HomescreenState extends State<Homescreen> {
     }).toList();
 
     const int columnCount = 3; // 열의 수
-    final int rowCount = (beadItems.length / columnCount).ceil(); // 행의 수
+    const int rowCount = 5;
 
     final List<List<Widget>> transformedData = [];
-    for (int i = 0; i < columnCount; i++) {
-      List<Widget> columnData = [];
-      for (int j = 0; j < rowCount; j++) {
+    for (int i = 0; i < rowCount; i++) {
+      List<Widget> rowData = [];
+      for (int j = 0; j < columnCount; j++) {
         if ((i * columnCount + j) < beadItems.length) {
-          columnData.add(beadItems[(i * columnCount) + j]);
+          rowData.add(beadItems[(i * columnCount) + j]);
         }
       }
       if (i % 2 == 1) {
-        columnData = columnData.reversed.toList();
+        rowData = rowData.reversed.toList();
       }
-      transformedData.add(columnData);
+      transformedData.add(rowData);
     }
 
-    final List<Widget> finalData = [];
+    final List<Widget> finalItems = [];
     for (int i = 0; i < rowCount; i++) {
       for (int j = 0; j < columnCount; j++) {
         if (i < transformedData.length && j < transformedData[i].length) {
-          finalData.add(transformedData[i][j]);
+          finalItems.add(transformedData[i][j]);
         }
       }
     }
@@ -80,27 +91,40 @@ class _HomescreenState extends State<Homescreen> {
               const SizedBox(
                 height: 60,
               ),
-              GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const NoteScreen()));
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.all(20),
-                    child: Bead(title: '+', color: Colors.white),
-                  )),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const NoteScreen()));
+                      },
+                      child: const Bead(title: '+', color: Colors.white),
+                    ),
+                    const Image(
+                      image: AssetImage('assets/images/controller.png'),
+                      width: 180,
+                    )
+                  ],
+                ),
+              ),
               Expanded(
                 child: Container(
+                  decoration: const BoxDecoration(
+                      image: DecorationImage(
+                          fit: BoxFit.fill,
+                          image: AssetImage('assets/images/pipe_bg.png'))),
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  color: Colors.grey.shade300,
                   child: GridView.count(
                       padding: const EdgeInsets.symmetric(vertical: 40),
                       crossAxisCount: 3,
                       crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                      children: finalData),
+                      mainAxisSpacing: 24,
+                      children: finalItems),
                 ),
               ),
             ],
