@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:insidegram/screens/detail_screen.dart';
 import 'package:insidegram/screens/note_screen.dart';
 import 'package:insidegram/widgets/bead_widget.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Homescreen extends StatefulWidget {
   const Homescreen({super.key});
@@ -11,6 +12,8 @@ class Homescreen extends StatefulWidget {
 }
 
 class _HomescreenState extends State<Homescreen> {
+  final supabase = Supabase.instance.client;
+
   @override
   Widget build(BuildContext context) {
     List<BeadItem> beadItemsData = [
@@ -123,9 +126,12 @@ class _HomescreenState extends State<Homescreen> {
                       padding: const EdgeInsets.symmetric(vertical: 40),
                       crossAxisCount: 3,
                       crossAxisSpacing: 10,
-                      mainAxisSpacing: 24,
+                      mainAxisSpacing: 12,
                       children: finalItems),
                 ),
+              ),
+              const SizedBox(
+                height: 48,
               ),
             ],
           )),

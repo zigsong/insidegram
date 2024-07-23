@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:insidegram/screens/login_screen.dart';
+import 'package:insidegram/screens/page_view.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -28,7 +28,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'Insidegram',
-      home: LoginScreen(),
+      home: InsidegramPageView(),
     );
   }
 }
