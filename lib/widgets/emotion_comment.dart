@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-
-enum Emotion { joy, fear }
+import 'package:insidegram/models/emotion_comment_model.dart';
 
 Map<Emotion, Color> colorMap = {
   Emotion.joy: Colors.yellow.shade100,
+  Emotion.sadness: Colors.blue.shade100,
   Emotion.fear: Colors.indigo.shade100,
 };
 
 class EmotionComment extends StatelessWidget {
   const EmotionComment({super.key, required this.emotion, required this.text});
 
-  // NOTE: 감정들 enum으로 바꾸기
   final Emotion emotion;
   final String text;
 

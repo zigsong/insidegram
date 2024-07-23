@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:insidegram/models/emotion_comment_model.dart';
 import 'package:insidegram/widgets/emotion_comment.dart';
+import 'package:http/http.dart' as http;
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class NoteScreen extends StatefulWidget {
   const NoteScreen({super.key});
@@ -9,6 +14,44 @@ class NoteScreen extends StatefulWidget {
 }
 
 class _NoteScreenState extends State<NoteScreen> {
+  String inputText = '';
+  List<EmotionCommentModel> emotionComments = [];
+
+  final supabase = Supabase.instance.client;
+  static const String baseUrl = "http://223.130.159.43:8000";
+
+  Future<dynamic> postNote() async {
+    final accessToken = supabase.auth.currentSession?.accessToken;
+
+    if (accessToken == null) {
+      return;
+    }
+
+    final url = Uri.parse('$baseUrl/diary');
+    final response = await http.post(url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': accessToken,
+        },
+        body: json.encode({'content': inputText}));
+
+    if (response.statusCode == 200) {
+      final result = jsonDecode(utf8.decode(response.bodyBytes));
+
+      for (var comment in result['reaction']) {
+        emotionComments.add(EmotionCommentModel.fromJson(comment));
+      }
+
+      setState(() {
+        inputText = '';
+      });
+
+      return;
+    }
+
+    throw Error();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,9 +71,6 @@ class _NoteScreenState extends State<NoteScreen> {
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const EmotionComment(
-                  emotion: Emotion.joy,
-                  text: '좋은 사람들과의 피크닉은 언제나 우리를 즐겁게 하지! 너무 즐거웠겠다!'),
               TextButton(
                 style: TextButton.styleFrom(
                     textStyle: const TextStyle(fontSize: 16),
@@ -53,36 +93,39 @@ class _NoteScreenState extends State<NoteScreen> {
                     )
                   ],
                 ),
-                child: const TextField(
+                child: TextField(
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       hintText: "감정일기를 작성해보세요",
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(vertical: 20)),
+                  onChanged: (text) {
+                    setState(() {
+                      inputText = text;
+                    });
+                  },
                 ),
               ),
-              Container(
-                height: 24,
-                width: 24,
-                margin: const EdgeInsets.only(bottom: 20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(50),
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 4,
-                      offset: const Offset(2, 2),
-                      color: Colors.black.withOpacity(0.1),
-                    )
-                  ],
+              Expanded(
+                child: SizedBox(
+                  height: 100,
+                  child: ListView(
+                    padding: const EdgeInsets.all(8),
+                    children: emotionComments
+                        .map((comment) => Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: EmotionComment(
+                                  emotion: comment.emotion_type,
+                                  text: comment.content),
+                            ))
+                        .toList(),
+                  ),
                 ),
               ),
-              const EmotionComment(
-                  emotion: Emotion.fear, text: '호수에 빠지고 그러진 않았겠지? 언제나 조심해야해'),
-              const SizedBox(
-                height: 60,
-              )
+              // const SizedBox(
+              //   height: 60,
+              // )
             ],
           ),
         ),
@@ -102,7 +145,10 @@ class _NoteScreenState extends State<NoteScreen> {
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context, 'Ok'),
+            onPressed: () {
+              postNote();
+              Navigator.pop(context, 'Ok');
+            },
             child: const Text('OK'),
           ),
         ],
