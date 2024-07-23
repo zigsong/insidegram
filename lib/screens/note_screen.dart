@@ -30,6 +30,7 @@ class _NoteScreenState extends State<NoteScreen> {
     final url = Uri.parse('$baseUrl/diary');
     final response = await http.post(url,
         headers: {
+          'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json',
           'Authorization': accessToken,
         },
