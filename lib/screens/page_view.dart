@@ -51,9 +51,6 @@ class _InsidegramPageViewState extends State<InsidegramPageView>
   }
 
   void _handlePageViewChanged(int currentPageIndex) {
-    if (!_isOnDesktopAndWeb) {
-      return;
-    }
     _tabController.index = currentPageIndex;
     setState(() {
       _currentPageIndex = currentPageIndex;
