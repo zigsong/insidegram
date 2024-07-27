@@ -1,4 +1,4 @@
-enum Emotion { joy, sadness, anxiety, fear }
+enum Emotion { joy, sadness, anxiety, fear, anger }
 
 class EmotionCommentModel {
   final Emotion emotion_type;

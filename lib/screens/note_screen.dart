@@ -71,75 +71,73 @@ class _NoteScreenState extends State<NoteScreen> {
       backgroundColor: Colors.grey.shade50,
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 40),
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (_emotionComments == null)
-                TextButton(
-                  style: TextButton.styleFrom(
-                      textStyle: const TextStyle(fontSize: 16),
-                      padding: const EdgeInsets.all(0)),
-                  onPressed: () => showConfirmDialog(context),
-                  child: const Text('완료'),
-                ),
-              Container(
-                height: 300,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                margin: const EdgeInsets.only(bottom: 16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 4,
-                      offset: const Offset(2, 2),
-                      color: Colors.black.withOpacity(0.1),
-                    )
-                  ],
-                ),
-                child: TextField(
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  decoration: const InputDecoration(
-                      hintText: "감정일기를 작성해보세요",
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(vertical: 20)),
-                  onChanged: (text) {
-                    setState(() {
-                      inputText = text;
-                    });
-                  },
-                ),
+        margin: const EdgeInsets.only(bottom: 60),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              height: 300,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              margin: const EdgeInsets.only(bottom: 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(40),
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 4,
+                    offset: const Offset(2, 2),
+                    color: Colors.black.withOpacity(0.1),
+                  )
+                ],
               ),
-              if (_emotionComments != null)
-                FutureBuilder(
-                  future: _emotionComments,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasData) {
-                      return Expanded(
-                        child: Column(
-                          children: [
-                            const SizedBox(height: 50),
-                            Expanded(
-                                child: EmotionComments(
-                                    emotionComments: snapshot.data!)),
-                          ],
-                        ),
-                      );
-                    } else {
-                      return const Center(child: Text('No data'));
-                    }
-                  },
-                ),
-              // const SizedBox(
-              //   height: 60,
-              // )
-            ],
-          ),
+              child: TextField(
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                decoration: const InputDecoration(
+                    hintText: "감정일기를 작성해보세요",
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(vertical: 20)),
+                onChanged: (text) {
+                  setState(() {
+                    inputText = text;
+                  });
+                },
+              ),
+            ),
+            if (_emotionComments == null)
+              ElevatedButton(
+                onPressed: () => showConfirmDialog(context),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.indigo.shade300,
+                    foregroundColor: Colors.white,
+                    textStyle: const TextStyle(fontWeight: FontWeight.bold)),
+                child: const Text('완료'),
+              ),
+            if (_emotionComments != null)
+              FutureBuilder(
+                future: _emotionComments,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasData) {
+                    return Expanded(
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 16),
+                          EmotionComments(emotionComments: snapshot.data!),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return const Center(child: Text('No data'));
+                  }
+                },
+              ),
+            // const SizedBox(
+            //   height: 60,
+            // )
+          ],
         ),
       ),
     );
@@ -182,18 +180,16 @@ class EmotionComments extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: SizedBox(
-        height: 100,
-        child: ListView(
-          padding: const EdgeInsets.all(8),
-          children: emotionComments
-              .map((comment) => Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: EmotionComment(
-                        emotion: comment.emotion_type, text: comment.content),
-                  ))
-              .toList(),
-        ),
+      child: ListView(
+        padding: const EdgeInsets.all(8),
+        children: emotionComments
+            .map((comment) => Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: EmotionComment(
+                  emotion: comment.emotion_type,
+                  text: comment.content,
+                )))
+            .toList(),
       ),
     );
   }
