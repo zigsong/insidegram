@@ -11,48 +11,54 @@ class _MyroomScreenState extends State<MyroomScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurple.shade300,
-      body: Container(
-        padding: const EdgeInsets.only(top: 80, bottom: 120),
+      backgroundColor: const Color(0xff54336F),
+      body: Align(
+        alignment: FractionalOffset.bottomCenter,
         child: Column(
           children: [
             const SizedBox(
               height: 40,
             ),
-            const Text(
-              'InsideGram',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 80,
-                fontFamily: 'Inside-Out',
+            const SizedBox(
+              height: 300,
+              child: Center(
+                child: Text(
+                  '감정이 들어갈 자리',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
-            const SizedBox(
-              height: 100,
+            const Image(
+              image: AssetImage('assets/images/control_panel.png'),
             ),
-            Center(
-              child: Stack(
+            Container(
+              decoration: const BoxDecoration(color: Color(0xfff0f0f0)),
+              child: const Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  const Image(
-                    image: AssetImage('assets/images/control_panel.png'),
-                    width: 320,
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Image(
+                      image: AssetImage('assets/images/myroom_door.png'),
+                      // width: 320,
+                    ),
                   ),
                   Positioned(
-                    right: -40,
-                    bottom: -120,
-                    child: Row(
-                      children: [
-                        ElevatedButton(
-                            onPressed: () {}, child: const Text('추억 만나기')),
-                        const Image(
-                          image: AssetImage('assets/images/memory_grandma.png'),
-                          width: 160,
-                        ),
-                      ],
+                    left: 0,
+                    bottom: 0,
+                    child: Image(
+                      image: AssetImage('assets/images/memory_grandma.png'),
+                      width: 200,
                     ),
-                  )
+                  ),
+                  Positioned(
+                    right: 0,
+                    bottom: 0,
+                    child: Image(
+                      image: AssetImage('assets/images/memory_book.png'),
+                      width: 200,
+                    ),
+                  ),
                 ],
               ),
             )
