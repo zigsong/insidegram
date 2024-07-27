@@ -14,12 +14,12 @@ class _MyroomScreenState extends State<MyroomScreen> {
       backgroundColor: Colors.deepPurple.shade300,
       body: Container(
         padding: const EdgeInsets.only(top: 80, bottom: 120),
-        child: const Column(
+        child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 40,
             ),
-            Text(
+            const Text(
               'InsideGram',
               style: TextStyle(
                 color: Colors.white,
@@ -28,53 +28,32 @@ class _MyroomScreenState extends State<MyroomScreen> {
                 fontFamily: 'Inside-Out',
               ),
             ),
-            SizedBox(
-              height: 160,
+            const SizedBox(
+              height: 100,
             ),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: [
-            //     Padding(
-            //       padding: EdgeInsets.symmetric(horizontal: 8),
-            //       child: Image(
-            //         image: AssetImage('assets/images/joy_simple.png'),
-            //         width: 60,
-            //       ),
-            //     ),
-            //     Padding(
-            //       padding: EdgeInsets.symmetric(horizontal: 8),
-            //       child: Image(
-            //         image: AssetImage('assets/images/annoy_simple.png'),
-            //         width: 60,
-            //       ),
-            //     ),
-            //     Padding(
-            //       padding: EdgeInsets.symmetric(horizontal: 8),
-            //       child: Image(
-            //         image: AssetImage('assets/images/anger_simple.png'),
-            //         width: 60,
-            //       ),
-            //     ),
-            //     Padding(
-            //       padding: EdgeInsets.symmetric(horizontal: 8),
-            //       child: Image(
-            //         image: AssetImage('assets/images/fear_simple.png'),
-            //         width: 60,
-            //       ),
-            //     ),
-            //     Padding(
-            //       padding: EdgeInsets.symmetric(horizontal: 8),
-            //       child: Image(
-            //         image: AssetImage('assets/images/sadness_simple.png'),
-            //         width: 60,
-            //       ),
-            //     ),
-            //   ],
-            // ),
             Center(
-              child: Image(
-                image: AssetImage('assets/images/control_panel.png'),
-                width: 320,
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  const Image(
+                    image: AssetImage('assets/images/control_panel.png'),
+                    width: 320,
+                  ),
+                  Positioned(
+                    right: -40,
+                    bottom: -120,
+                    child: Row(
+                      children: [
+                        ElevatedButton(
+                            onPressed: () {}, child: const Text('추억 만나기')),
+                        const Image(
+                          image: AssetImage('assets/images/memory_grandma.png'),
+                          width: 160,
+                        ),
+                      ],
+                    ),
+                  )
+                ],
               ),
             )
           ],
