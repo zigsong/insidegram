@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:insidegram/models/diary_model.dart';
 import 'package:insidegram/screens/detail_screen.dart';
 import 'package:insidegram/screens/note_screen.dart';
 import 'package:insidegram/widgets/bead_widget.dart';
+import 'package:insidegram/widgets/emotion_comment.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:http/http.dart' as http;
 
 class Homescreen extends StatefulWidget {
   const Homescreen({super.key});
@@ -14,49 +19,70 @@ class Homescreen extends StatefulWidget {
 class _HomescreenState extends State<Homescreen> {
   final supabase = Supabase.instance.client;
 
-  @override
-  Widget build(BuildContext context) {
-    List<BeadItem> beadItemsData = [
-      BeadItem(title: '1. 핔닠'),
-      BeadItem(title: '2. 지각', color: Colors.red.shade300),
-      BeadItem(title: '3. 바다', color: Colors.green.shade300),
-      BeadItem(title: '4. 행복', color: Colors.blue.shade300),
-      BeadItem(title: '5. 핔닠'),
-      BeadItem(title: '6. 지각', color: Colors.red.shade300),
-      BeadItem(title: '7. 바다', color: Colors.green.shade300),
-      BeadItem(title: '8. 행복', color: Colors.blue.shade300),
-      BeadItem(
-        title: '9. 핔닠',
-      ),
-      BeadItem(title: '10. 지각', color: Colors.red.shade300),
-      BeadItem(title: '11. 바다', color: Colors.green.shade300),
-      BeadItem(title: '12. 행복', color: Colors.blue.shade300),
-      BeadItem(
-        title: '13. 핔닠',
-      ),
-      BeadItem(title: '14. 지각', color: Colors.red.shade300),
-      BeadItem(title: '15. 바다', color: Colors.green.shade300),
-    ];
+  static const String baseUrl = "http://223.130.159.43:8000";
+  late Future<List<DiaryModel>> _diaries;
+  final List<DiaryModel> _diariesData = [];
 
-    List<Widget> beadItems = beadItemsData.map((item) {
-      return GestureDetector(
+  @override
+  void initState() {
+    super.initState();
+    _diaries = fetchDiaries();
+  }
+
+  Future<List<DiaryModel>> fetchDiaries() async {
+    final accessToken = supabase.auth.currentSession?.accessToken;
+
+    if (accessToken == null) {
+      return [];
+    }
+
+    final url = Uri.parse('$baseUrl/diary');
+    final response = await http.get(
+      url,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
+        'Authorization': accessToken,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final result = jsonDecode(utf8.decode(response.bodyBytes));
+
+      print(result);
+      for (var diary in result) {
+        _diariesData.add(DiaryModel.fromJson(diary));
+      }
+
+      return _diariesData;
+    }
+
+    throw Error();
+  }
+
+  List<Widget> convertDiairiesIntoBeads(List<DiaryModel> data) {
+    final List<Widget> result = [];
+
+    for (var diary in data) {
+      result.add(GestureDetector(
         onTap: () {
           Navigator.push(
             context,
             /** NOTE: screen 전환 말고 모달로 띄우면 예쁠듯? */
             MaterialPageRoute(
               builder: (context) => DetailScreen(
-                title: item.title,
+                content: diary.content,
               ),
             ),
           );
         },
         child: Bead(
-          title: item.title,
-          color: item.color,
+          content: diary.content,
+          color: colorMap[diary.main_emotion],
+          created_at: diary.created_at,
         ),
-      );
-    }).toList();
+      ));
+    }
 
     const int columnCount = 3; // 열의 수
     const int rowCount = 5;
@@ -65,8 +91,8 @@ class _HomescreenState extends State<Homescreen> {
     for (int i = 0; i < rowCount; i++) {
       List<Widget> rowData = [];
       for (int j = 0; j < columnCount; j++) {
-        if ((i * columnCount + j) < beadItems.length) {
-          rowData.add(beadItems[(i * columnCount) + j]);
+        if ((i * columnCount + j) < result.length) {
+          rowData.add(result[(i * columnCount) + j]);
         }
       }
       if (i % 2 == 1) {
@@ -84,6 +110,11 @@ class _HomescreenState extends State<Homescreen> {
       }
     }
 
+    return finalItems;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.pink.shade50,
       body: Container(
@@ -106,7 +137,10 @@ class _HomescreenState extends State<Homescreen> {
                             MaterialPageRoute(
                                 builder: (context) => const NoteScreen()));
                       },
-                      child: const Bead(title: '+', color: Colors.white),
+                      child: const Bead(
+                        content: '+',
+                        color: Colors.white,
+                      ),
                     ),
                     const Image(
                       image: AssetImage('assets/images/controller.png'),
@@ -122,12 +156,23 @@ class _HomescreenState extends State<Homescreen> {
                           fit: BoxFit.fill,
                           image: AssetImage('assets/images/pipe_bg.png'))),
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: GridView.count(
-                      padding: const EdgeInsets.symmetric(vertical: 40),
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 12,
-                      children: finalItems),
+                  child: FutureBuilder(
+                    future: _diaries,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasData) {
+                        return GridView.count(
+                            padding: const EdgeInsets.symmetric(vertical: 40),
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 12,
+                            children: convertDiairiesIntoBeads(snapshot.data!));
+                      } else {
+                        return const Center(child: Text('No data'));
+                      }
+                    },
+                  ),
                 ),
               ),
               const SizedBox(

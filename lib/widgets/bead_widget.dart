@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
-
-class BeadItem {
-  final String title;
-  final Color? color;
-
-  BeadItem({required this.title, this.color});
-}
+import 'package:intl/intl.dart';
 
 class Bead extends StatelessWidget {
-  const Bead({super.key, required this.title, this.color});
+  const Bead({super.key, required this.content, this.color, this.created_at});
 
-  final String title;
+  final String content;
   final Color? color;
+  final String? created_at;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +30,9 @@ class Bead extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            title,
+            created_at != null
+                ? DateFormat('MMdd').format(DateTime.parse(created_at ?? ''))
+                : content,
             textAlign: TextAlign.center,
             style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
           ),

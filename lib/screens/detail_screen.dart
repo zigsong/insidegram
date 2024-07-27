@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class DetailScreen extends StatelessWidget {
-  final String title;
+  final String content;
 
   const DetailScreen({
     super.key,
-    required this.title,
+    required this.content,
   });
 
   @override
@@ -18,7 +18,7 @@ class DetailScreen extends StatelessWidget {
           Navigator.pop(context);
         },
       )),
-      body: Center(child: Text(title)),
+      body: Center(child: Text(content)),
     );
   }
 }
