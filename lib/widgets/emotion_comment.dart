@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:insidegram/models/emotion_comment_model.dart';
 
 Map<Emotion, Color> colorMap = {
-  Emotion.joy: Colors.yellow,
+  Emotion.joy: Colors.amber,
   Emotion.sadness: Colors.blue,
   Emotion.fear: Colors.indigo,
   Emotion.anxiety: Colors.orange,

@@ -49,11 +49,9 @@ class _HomescreenState extends State<Homescreen> {
     if (response.statusCode == 200) {
       final result = jsonDecode(utf8.decode(response.bodyBytes));
 
-      print(result);
       for (var diary in result) {
         _diariesData.add(DiaryModel.fromJson(diary));
       }
-
       return _diariesData;
     }
 
@@ -71,6 +69,7 @@ class _HomescreenState extends State<Homescreen> {
             /** NOTE: screen 전환 말고 모달로 띄우면 예쁠듯? */
             MaterialPageRoute(
               builder: (context) => DetailScreen(
+                diary_id: diary.diary_id,
                 content: diary.content,
               ),
             ),
@@ -133,9 +132,14 @@ class _HomescreenState extends State<Homescreen> {
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const NoteScreen()));
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const NoteScreen()))
+                            .then((val) {
+                          if (val == 'Refetch') {
+                            fetchDiaries();
+                          }
+                        });
                       },
                       child: const Bead(
                         content: '+',

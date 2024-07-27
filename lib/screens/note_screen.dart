@@ -42,7 +42,6 @@ class _NoteScreenState extends State<NoteScreen> {
     if (response.statusCode == 200) {
       final result = jsonDecode(utf8.decode(response.bodyBytes));
 
-      print(result);
       for (var comment in result['reaction']) {
         _emotionCommentsData.add(EmotionCommentModel.fromJson(comment));
       }
@@ -61,14 +60,14 @@ class _NoteScreenState extends State<NoteScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.grey.shade50,
+          backgroundColor: const Color(0xff54336F),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(context, 'Refetch');
             },
           )),
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: const Color(0xff54336F),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 40),
         margin: const EdgeInsets.only(bottom: 60),
@@ -109,8 +108,8 @@ class _NoteScreenState extends State<NoteScreen> {
               ElevatedButton(
                 onPressed: () => showConfirmDialog(context),
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.indigo.shade300,
-                    foregroundColor: Colors.white,
+                    foregroundColor: Colors.indigo.shade300,
+                    backgroundColor: Colors.white,
                     textStyle: const TextStyle(fontWeight: FontWeight.bold)),
                 child: const Text('완료'),
               ),
@@ -119,7 +118,11 @@ class _NoteScreenState extends State<NoteScreen> {
                 future: _emotionComments,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(
+                        child: Image(
+                      image: AssetImage('assets/images/text_loader.gif'),
+                      width: 200,
+                    ));
                   } else if (snapshot.hasData) {
                     return Expanded(
                       child: Column(

@@ -18,6 +18,8 @@ class EmotionCommentModel {
         return Emotion.sadness;
       case 'anxiety':
         return Emotion.anxiety;
+      case 'anger':
+        return Emotion.anger;
       default:
         throw Exception('Unknown emotion type');
     }
