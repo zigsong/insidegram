@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -15,16 +16,18 @@ class NoteScreen extends StatefulWidget {
 
 class _NoteScreenState extends State<NoteScreen> {
   String inputText = '';
-  List<EmotionCommentModel> emotionComments = [];
+
+  Future<List<EmotionCommentModel>>? _emotionComments;
+  final List<EmotionCommentModel> _emotionCommentsData = [];
 
   final supabase = Supabase.instance.client;
   static const String baseUrl = "http://223.130.159.43:8000";
 
-  Future<dynamic> postNote() async {
+  Future<List<EmotionCommentModel>> postNote() async {
     final accessToken = supabase.auth.currentSession?.accessToken;
 
     if (accessToken == null) {
-      return;
+      return [];
     }
 
     final url = Uri.parse('$baseUrl/diary');
@@ -39,15 +42,16 @@ class _NoteScreenState extends State<NoteScreen> {
     if (response.statusCode == 200) {
       final result = jsonDecode(utf8.decode(response.bodyBytes));
 
+      print(result);
       for (var comment in result['reaction']) {
-        emotionComments.add(EmotionCommentModel.fromJson(comment));
+        _emotionCommentsData.add(EmotionCommentModel.fromJson(comment));
       }
 
       setState(() {
         inputText = '';
       });
 
-      return;
+      return _emotionCommentsData;
     }
 
     throw Error();
@@ -72,13 +76,14 @@ class _NoteScreenState extends State<NoteScreen> {
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextButton(
-                style: TextButton.styleFrom(
-                    textStyle: const TextStyle(fontSize: 16),
-                    padding: const EdgeInsets.all(0)),
-                onPressed: () => showConfirmDialog(context),
-                child: const Text('완료'),
-              ),
+              if (_emotionComments == null)
+                TextButton(
+                  style: TextButton.styleFrom(
+                      textStyle: const TextStyle(fontSize: 16),
+                      padding: const EdgeInsets.all(0)),
+                  onPressed: () => showConfirmDialog(context),
+                  child: const Text('완료'),
+                ),
               Container(
                 height: 300,
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -108,22 +113,28 @@ class _NoteScreenState extends State<NoteScreen> {
                   },
                 ),
               ),
-              Expanded(
-                child: SizedBox(
-                  height: 100,
-                  child: ListView(
-                    padding: const EdgeInsets.all(8),
-                    children: emotionComments
-                        .map((comment) => Padding(
-                              padding: const EdgeInsets.only(bottom: 12),
-                              child: EmotionComment(
-                                  emotion: comment.emotion_type,
-                                  text: comment.content),
-                            ))
-                        .toList(),
-                  ),
+              if (_emotionComments != null)
+                FutureBuilder(
+                  future: _emotionComments,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasData) {
+                      return Expanded(
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 50),
+                            Expanded(
+                                child: EmotionComments(
+                                    emotionComments: snapshot.data!)),
+                          ],
+                        ),
+                      );
+                    } else {
+                      return const Center(child: Text('No data'));
+                    }
+                  },
                 ),
-              ),
               // const SizedBox(
               //   height: 60,
               // )
@@ -147,12 +158,42 @@ class _NoteScreenState extends State<NoteScreen> {
           ),
           TextButton(
             onPressed: () {
-              postNote();
+              setState(() {
+                _emotionComments = postNote();
+              });
               Navigator.pop(context, 'Ok');
             },
             child: const Text('OK'),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class EmotionComments extends StatelessWidget {
+  const EmotionComments({
+    super.key,
+    required this.emotionComments,
+  });
+
+  final List<EmotionCommentModel> emotionComments;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: SizedBox(
+        height: 100,
+        child: ListView(
+          padding: const EdgeInsets.all(8),
+          children: emotionComments
+              .map((comment) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: EmotionComment(
+                        emotion: comment.emotion_type, text: comment.content),
+                  ))
+              .toList(),
+        ),
       ),
     );
   }

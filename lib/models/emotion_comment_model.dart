@@ -1,4 +1,4 @@
-enum Emotion { joy, sadness, fear }
+enum Emotion { joy, sadness, anxiety, fear }
 
 class EmotionCommentModel {
   final Emotion emotion_type;
@@ -16,6 +16,8 @@ class EmotionCommentModel {
         return Emotion.joy;
       case 'sadness':
         return Emotion.sadness;
+      case 'anxiety':
+        return Emotion.anxiety;
       default:
         throw Exception('Unknown emotion type');
     }

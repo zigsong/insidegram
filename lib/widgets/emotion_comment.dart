@@ -5,6 +5,7 @@ Map<Emotion, Color> colorMap = {
   Emotion.joy: Colors.yellow.shade100,
   Emotion.sadness: Colors.blue.shade100,
   Emotion.fear: Colors.indigo.shade100,
+  Emotion.anxiety: Colors.red,
 };
 
 class EmotionComment extends StatelessWidget {
