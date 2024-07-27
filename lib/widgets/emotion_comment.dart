@@ -3,10 +3,10 @@ import 'package:insidegram/models/emotion_comment_model.dart';
 
 Map<Emotion, Color> colorMap = {
   Emotion.joy: Colors.amber,
-  Emotion.sadness: Colors.blue,
+  Emotion.sadness: const Color(0xff194CCC),
   Emotion.fear: Colors.indigo,
-  Emotion.anxiety: Colors.orange,
-  Emotion.anger: Colors.red,
+  Emotion.anxiety: const Color(0xffFF8229),
+  Emotion.anger: const Color(0xffD22B2A),
 };
 
 Map<Emotion, String> imageMap = {
@@ -15,6 +15,14 @@ Map<Emotion, String> imageMap = {
   Emotion.fear: 'assets/images/fear_comment.png',
   Emotion.anxiety: 'assets/images/anxiety_comment.png',
   Emotion.anger: 'assets/images/anger_comment.png',
+};
+
+Map<Emotion, String> messageMap = {
+  Emotion.joy: '인생은 정말 너무 재미있어!',
+  Emotion.sadness: '너무 슬퍼서 아무것도 할 수 없어',
+  Emotion.fear: '이불 밖은 위험해!',
+  Emotion.anxiety: '다음엔 어떻게 해야하지?',
+  Emotion.anger: '으아아아, 정말 왜그러는거야!',
 };
 
 class EmotionComment extends StatelessWidget {

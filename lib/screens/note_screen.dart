@@ -108,7 +108,7 @@ class _NoteScreenState extends State<NoteScreen> {
               ElevatedButton(
                 onPressed: () => showConfirmDialog(context),
                 style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.indigo.shade300,
+                    foregroundColor: const Color(0xff54336F),
                     backgroundColor: Colors.white,
                     textStyle: const TextStyle(fontWeight: FontWeight.bold)),
                 child: const Text('완료'),
@@ -137,9 +137,6 @@ class _NoteScreenState extends State<NoteScreen> {
                   }
                 },
               ),
-            // const SizedBox(
-            //   height: 60,
-            // )
           ],
         ),
       ),

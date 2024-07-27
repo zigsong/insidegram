@@ -52,8 +52,6 @@ class _DetailScreenState extends State<DetailScreen> {
     if (response.statusCode == 200) {
       final result = jsonDecode(utf8.decode(response.bodyBytes));
 
-      print('result: $result');
-
       return DiaryDetailModel.fromJson(result);
     }
 
