@@ -62,7 +62,7 @@ class _NoteScreenState extends State<NoteScreen> {
       appBar: AppBar(
           backgroundColor: const Color(0xff54336F),
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
               Navigator.pop(context, 'Refetch');
             },

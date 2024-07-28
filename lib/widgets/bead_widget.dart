@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class Bead extends StatelessWidget {
-  const Bead({super.key, required this.content, this.color, this.created_at});
+  const Bead({super.key, this.content, this.color, this.created_at});
 
-  final String content;
+  final String? content;
   final Color? color;
   final String? created_at;
 
@@ -17,7 +16,13 @@ class Bead extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: color ?? Colors.yellow.shade300,
-        borderRadius: BorderRadius.circular(30),
+        gradient: RadialGradient(
+          colors: [
+            Colors.white,
+            color ?? Colors.yellow.shade300,
+          ],
+        ),
+        borderRadius: BorderRadius.circular(40),
         boxShadow: [
           BoxShadow(
             blurRadius: 4,
@@ -26,17 +31,18 @@ class Bead extends StatelessWidget {
           )
         ],
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            created_at != null
-                ? DateFormat('MMdd').format(DateTime.parse(created_at ?? ''))
-                : content,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
-          ),
-        ],
+      child: Builder(
+        builder: (context) {
+          if (content != null) {
+            return const Center(
+                child: Image(
+              image: AssetImage('assets/images/add.png'),
+              width: 16,
+            ));
+          } else {
+            return const Text('');
+          }
+        },
       ),
     );
   }

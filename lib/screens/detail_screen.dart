@@ -64,44 +64,43 @@ class _DetailScreenState extends State<DetailScreen> {
       appBar: AppBar(
           backgroundColor: const Color(0xff54336F),
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
               Navigator.pop(context, 'Refetch');
             },
           )),
       backgroundColor: const Color(0xff54336F),
-      body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 40),
-        margin: const EdgeInsets.only(bottom: 60),
-        child: FutureBuilder(
-          future: _diary,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasData) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    height: 300,
-                    width: 300,
-                    padding: const EdgeInsets.all(24),
-                    margin: const EdgeInsets.only(bottom: 16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(40),
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 4,
-                          offset: const Offset(2, 2),
-                          color: Colors.black.withOpacity(0.1),
-                        )
-                      ],
-                    ),
-                    child: Text(snapshot.data!.content),
+      body: FutureBuilder(
+        future: _diary,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasData) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: 300,
+                  width: 300,
+                  padding: const EdgeInsets.all(24),
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(40),
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 4,
+                        offset: const Offset(2, 2),
+                        color: Colors.black.withOpacity(0.1),
+                      )
+                    ],
                   ),
-                  Expanded(
+                  child: Text(snapshot.data!.content),
+                ),
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
                     child: Column(
                       children: [
                         const SizedBox(height: 16),
@@ -110,35 +109,14 @@ class _DetailScreenState extends State<DetailScreen> {
                       ],
                     ),
                   ),
-                ],
-              );
-            } else {
-              return const Center(child: Text('No data'));
-            }
-          },
-        ),
+                ),
+              ],
+            );
+          } else {
+            return const Center(child: Text('No data'));
+          }
+        },
       ),
     );
-    // return Scaffold(
-    //     appBar: AppBar(
-    //         leading: IconButton(
-    //       icon: const Icon(Icons.arrow_back),
-    //       onPressed: () {
-    //         Navigator.pop(context);
-    //       },
-    //     )),
-    //     body: FutureBuilder(
-    //       future: _diary,
-    //       builder: (context, snapshot) {
-    //         if (snapshot.connectionState == ConnectionState.waiting) {
-    //           return const Center(child: CircularProgressIndicator());
-    //         } else if (snapshot.hasData) {
-    //           return Expanded(
-    //               child: Center(child: Text(snapshot.data!.content)));
-    //         } else {
-    //           return const Center(child: Text('No data'));
-    //         }
-    //       },
-    //     ));
   }
 }

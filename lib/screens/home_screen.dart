@@ -76,7 +76,6 @@ class _HomescreenState extends State<Homescreen> {
           );
         },
         child: Bead(
-          content: diary.content,
           color: colorMap[diary.main_emotion],
           created_at: diary.created_at,
         ),
