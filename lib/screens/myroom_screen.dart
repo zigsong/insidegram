@@ -123,17 +123,17 @@ class _MyroomScreenState extends State<MyroomScreen> {
             ),
             Container(
               decoration: const BoxDecoration(color: Color(0xfff0f0f0)),
-              child: const Stack(
+              child: Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Image(
                       image: AssetImage('assets/images/myroom_door.png'),
                       // width: 320,
                     ),
                   ),
-                  Positioned(
+                  const Positioned(
                     left: 0,
                     bottom: 0,
                     child: Image(
@@ -141,7 +141,7 @@ class _MyroomScreenState extends State<MyroomScreen> {
                       width: 200,
                     ),
                   ),
-                  Positioned(
+                  const Positioned(
                     right: 0,
                     bottom: 0,
                     child: Image(
@@ -149,6 +149,19 @@ class _MyroomScreenState extends State<MyroomScreen> {
                       width: 200,
                     ),
                   ),
+                  Positioned.fill(
+                      child: Align(
+                    alignment: Alignment.center,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.black,
+                          backgroundColor: const Color(0xffE3D6D7),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 12)),
+                      child: const Text('홍홍홍.. 옛날에 이런일이 있었다지.\n추억을 한 번 보겠니?'),
+                    ),
+                  )),
                 ],
               ),
             )
