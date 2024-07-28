@@ -18,11 +18,13 @@ class _MyroomScreenState extends State<MyroomScreen> {
 
   static const String baseUrl = "http://223.130.159.43:8000";
   late Future<Emotion> _main_emotion;
+  late Future<String> _memoryText;
 
   @override
   void initState() {
     super.initState();
     _main_emotion = fetchMainEmotion();
+    _memoryText = fetchMemory();
   }
 
   Emotion _emotionFromString(String emotion) {
@@ -61,6 +63,32 @@ class _MyroomScreenState extends State<MyroomScreen> {
       final result = jsonDecode(utf8.decode(response.bodyBytes));
 
       return _emotionFromString(result['main_emotion']);
+    }
+
+    throw Error();
+  }
+
+  Future<String> fetchMemory() async {
+    final accessToken = supabase.auth.currentSession?.accessToken;
+
+    if (accessToken == null) {
+      return '';
+    }
+
+    final url = Uri.parse('$baseUrl/memory');
+    final response = await http.get(
+      url,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
+        'Authorization': accessToken,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final result = jsonDecode(utf8.decode(response.bodyBytes));
+
+      return result['memory_content'];
     }
 
     throw Error();
@@ -152,14 +180,49 @@ class _MyroomScreenState extends State<MyroomScreen> {
                   Positioned.fill(
                       child: Align(
                     alignment: Alignment.center,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.black,
-                          backgroundColor: const Color(0xffE3D6D7),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 24, vertical: 12)),
-                      child: const Text('홍홍홍.. 옛날에 이런일이 있었다지.\n추억을 한 번 보겠니?'),
+                    child: FutureBuilder(
+                      future: _memoryText,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasData) {
+                          return ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                _memoryText = fetchMemory();
+                              });
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return Dialog(
+                                        child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 20, vertical: 28),
+                                            child: Wrap(
+                                              children: [
+                                                const Text(
+                                                    '2023년 3월 3일에 작성한 일기\n'),
+                                                const SizedBox(
+                                                  height: 16,
+                                                ),
+                                                Text(snapshot.data!),
+                                              ],
+                                            )));
+                                  });
+                            },
+                            style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.black,
+                                backgroundColor: const Color(0xffE3D6D7),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 24, vertical: 12)),
+                            child: const Text(
+                                '홍홍홍.. 옛날에 이런일이 있었다지.\n추억을 한 번 보겠니?'),
+                          );
+                        } else {
+                          return const Center();
+                        }
+                      },
                     ),
                   )),
                 ],
