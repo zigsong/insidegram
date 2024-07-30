@@ -114,7 +114,7 @@ class _HomescreenState extends State<Homescreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.pink.shade50,
+      backgroundColor: const Color(0xffd9d9d9),
       body: Container(
           padding: const EdgeInsets.symmetric(vertical: 20),
           child: Column(
@@ -153,29 +153,59 @@ class _HomescreenState extends State<Homescreen> {
                 ),
               ),
               Expanded(
-                child: Container(
-                  decoration: const BoxDecoration(
-                      image: DecorationImage(
-                          fit: BoxFit.fill,
-                          image: AssetImage('assets/images/pipe_bg.png'))),
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: FutureBuilder(
-                    future: _diaries,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (snapshot.hasData) {
-                        return GridView.count(
-                            padding: const EdgeInsets.symmetric(vertical: 40),
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 12,
-                            children: convertDiairiesIntoBeads(snapshot.data!));
-                      } else {
-                        return const Center(child: Text('No data'));
-                      }
-                    },
-                  ),
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                        child: Image.asset(
+                      'assets/images/pipe_bg.png',
+                      repeat: ImageRepeat.repeatY,
+                      fit: BoxFit.fill,
+                    )),
+                    FutureBuilder(
+                      future: _diaries,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        } else if (snapshot.hasData) {
+                          return GridView.count(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 20, horizontal: 20),
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 8,
+                              mainAxisSpacing: 32,
+                              children:
+                                  convertDiairiesIntoBeads(snapshot.data!));
+                        } else {
+                          return const Center(child: Text('No data'));
+                        }
+                      },
+                    ),
+                  ],
+                  // decoration: const BoxDecoration(
+                  //     color: Color(0xffd9d9d9),
+                  //     image: DecorationImage(
+                  //         fit: BoxFit.fill,
+                  //         image: AssetImage('assets/images/pipe_bg.png'))),
+                  // padding: const EdgeInsets.symmetric(horizontal: 20),
+                  // child: FutureBuilder(
+                  //   future: _diaries,
+                  //   builder: (context, snapshot) {
+                  //     if (snapshot.connectionState == ConnectionState.waiting) {
+                  //       return const Center(child: CircularProgressIndicator());
+                  //     } else if (snapshot.hasData) {
+                  //       return GridView.count(
+                  //           padding: const EdgeInsets.symmetric(vertical: 20),
+                  //           crossAxisCount: 3,
+                  //           crossAxisSpacing: 8,
+                  //           mainAxisSpacing: 32,
+                  //           children: convertDiairiesIntoBeads(snapshot.data!));
+                  //     } else {
+                  //       return const Center(child: Text('No data'));
+                  //     }
+                  //   },
+                  // ),
                 ),
               ),
               const SizedBox(
