@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:insidegram/models/emotion_comment_model.dart';
+import 'package:insidegram/screens/login_screen.dart';
 import 'package:insidegram/widgets/emotion_comment.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -111,7 +112,15 @@ class _MyroomScreenState extends State<MyroomScreen> {
                     Icons.logout_rounded,
                     color: Colors.white,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    try {
+                      supabase.auth.signOut();
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => const LoginScreen()));
+                    } catch (err) {
+                      print('로그아웃 에러: $err');
+                    }
+                  },
                 ),
               ],
             ),
