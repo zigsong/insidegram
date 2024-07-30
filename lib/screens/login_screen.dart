@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:insidegram/screens/home_screen.dart';
+import 'package:insidegram/screens/page_view.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -17,100 +17,59 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Transform.rotate(
-                  angle: -0.25,
-                  child: const Image(
-                    image: AssetImage('assets/images/joy_simple.png'),
-                    width: 80,
-                  ),
-                ),
+      body: Container(
+        decoration: const BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+              Color(0xff6401B5),
+              Color(0xff2C004F),
+            ])),
+        child: Center(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Image(
+                image: AssetImage('assets/images/logo.png'),
+                width: 300,
               ),
-              const SizedBox(width: 60),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Transform.rotate(
-                  angle: 0.3,
-                  child: const Image(
-                    image: AssetImage('assets/images/anger_simple.png'),
-                    width: 80,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 40),
-            child: loginButton(
-                context: context,
-                text: '카카오 로그인',
-                textColor: Colors.black,
-                buttonColor: Colors.yellow,
-                svgPath: 'assets/images/kakao.svg',
-                width: 20,
-                height: 20,
-                onPressed: () async {
-                  try {
-                    await supabase.auth.signInWithOAuth(
-                      OAuthProvider.kakao,
-                      authScreenLaunchMode: LaunchMode.externalApplication,
-                    );
-                    supabase.auth.onAuthStateChange.listen((data) {
-                      final AuthChangeEvent event = data.event;
-                      if (event == AuthChangeEvent.signedIn) {
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => const Homescreen()));
-                      }
-                    });
-                  } on PlatformException catch (err) {
-                    print('에러: $err');
-                  }
-                }),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Transform.rotate(
-                  angle: -0.3,
-                  child: const Image(
-                    image: AssetImage('assets/images/annoy_simple.png'),
-                    width: 80,
-                  ),
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Image(
-                  image: AssetImage('assets/images/fear_simple.png'),
-                  width: 60,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Transform.rotate(
-                  angle: 0.3,
-                  child: const Image(
-                    image: AssetImage('assets/images/sadness_simple.png'),
-                    width: 80,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      )),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 40),
+              child: loginButton(
+                  context: context,
+                  text: '카카오 로그인',
+                  textColor: Colors.black,
+                  buttonColor: Colors.yellow,
+                  svgPath: 'assets/images/kakao.svg',
+                  width: 20,
+                  height: 20,
+                  onPressed: () async {
+                    try {
+                      await supabase.auth.signInWithOAuth(
+                        OAuthProvider.kakao,
+                        authScreenLaunchMode: LaunchMode.externalApplication,
+                      );
+                      supabase.auth.onAuthStateChange.listen((data) {
+                        final AuthChangeEvent event = data.event;
+                        if (event == AuthChangeEvent.signedIn) {
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const InsidegramPageView()));
+                        }
+                      });
+                    } on PlatformException catch (err) {
+                      print('로그인 에러: $err');
+                    }
+                  }),
+            ),
+          ],
+        )),
+      ),
     );
   }
 }
