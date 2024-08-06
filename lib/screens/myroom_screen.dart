@@ -101,6 +101,7 @@ class _MyroomScreenState extends State<MyroomScreen> {
       backgroundColor: const Color(0xff54336F),
       body: Stack(
         children: [
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
