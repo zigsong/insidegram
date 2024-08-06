@@ -108,7 +108,7 @@ class _HomescreenState extends State<Homescreen> {
       }
     }
 
-    return finalItems;
+    return finalItems.reversed.toList();
   }
 
   @override
