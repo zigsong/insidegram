@@ -23,7 +23,7 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   final supabase = Supabase.instance.client;
 
-  static const String baseUrl = "http://insidegram.n-e.kr:8000";
+  static const String baseUrl = "http://insidegram.n-e.kr";
   late Future<DiaryDetailModel?> _diary;
 
   @override

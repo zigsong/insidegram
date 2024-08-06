@@ -17,7 +17,7 @@ class MyroomScreen extends StatefulWidget {
 class _MyroomScreenState extends State<MyroomScreen> {
   final supabase = Supabase.instance.client;
 
-  static const String baseUrl = "http://insidegram.n-e.kr:8000";
+  static const String baseUrl = "http://insidegram.n-e.kr";
   late Future<Emotion> _main_emotion;
   late Future<String> _memoryText;
 
