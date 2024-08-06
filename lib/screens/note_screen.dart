@@ -21,7 +21,7 @@ class _NoteScreenState extends State<NoteScreen> {
   final List<EmotionCommentModel> _emotionCommentsData = [];
 
   final supabase = Supabase.instance.client;
-  static const String baseUrl = "http://223.130.159.43:8000";
+  static const String baseUrl = "http://insidegram.n-e.kr:8000";
 
   Future<List<EmotionCommentModel>> postNote() async {
     final accessToken = supabase.auth.currentSession?.accessToken;

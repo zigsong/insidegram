@@ -19,7 +19,7 @@ class Homescreen extends StatefulWidget {
 class _HomescreenState extends State<Homescreen> {
   final supabase = Supabase.instance.client;
 
-  static const String baseUrl = "http://223.130.159.43:8000";
+  static const String baseUrl = "http://insidegram.n-e.kr:8000";
   late Future<List<DiaryModel>> _diaries;
   final List<DiaryModel> _diariesData = [];
 
