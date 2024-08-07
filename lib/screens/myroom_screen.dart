@@ -130,7 +130,7 @@ class _MyroomScreenState extends State<MyroomScreen> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasData) {
+              } else {
                 return Transform.translate(
                   offset: const Offset(0, 64),
                   child: Column(
@@ -140,23 +140,22 @@ class _MyroomScreenState extends State<MyroomScreen> {
                             horizontal: 32, vertical: 16),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(50),
-                            color: colorMap[snapshot.data!]),
+                            color: colorMap[snapshot.data ?? Emotion.joy]),
                         child: Text(
-                          messageMap[snapshot.data!] ?? '',
+                          messageMap[snapshot.data ?? Emotion.joy]!,
                           style: const TextStyle(
                               color: Colors.white, fontWeight: FontWeight.w600),
                         ),
                       ),
                       const SizedBox(height: 20),
                       Image(
-                        image: AssetImage(imageMap[snapshot.data!] ?? ''),
+                        image:
+                            AssetImage(imageMap[snapshot.data ?? Emotion.joy]!),
                         width: 240,
                       ),
                     ],
                   ),
                 );
-              } else {
-                return const Center(child: Text('No data'));
               }
             },
           )),
