@@ -137,6 +137,7 @@ class _HomescreenState extends State<Homescreen> {
                             .then((val) {
                           if (val == 'Refetch') {
                             fetchDiaries();
+                            setState(() {});
                           }
                         });
                       },
